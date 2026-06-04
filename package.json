@@ -1,0 +1,39 @@
+{
+  "name": "assets-lens",
+  "version": "1.0.0",
+  "description": "Zero-config asset mapping tool that watches your files and generates strictly typed autocomplete paths for your frontend applications.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "snap-assets": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "assets:watch": "snap-assets --input ./public ./src/assets --output ./src/generated/assets.ts --watch"
+  },
+  "keywords": [
+    "typescript",
+    "assets",
+    "react",
+    "nextjs",
+    "vite",
+    "autocomplete",
+    "type-safe",
+    "dx",
+    "watcher"
+  ],
+  "author": "Biplav Sitaula",
+  "license": "MIT",
+  "dependencies": {
+    "cac": "^6.7.14",
+    "chokidar": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.41",
+    "typescript": "^5.3.3"
+  }
+}
