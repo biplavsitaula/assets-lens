@@ -7,6 +7,11 @@ export const Assets = {
       "batteryCharge": "/icons/battery-charge.svg",
       "bolt": "/icons/bolt.svg"
     }
+  },
+  "assets": {
+    "addSquare": "/add-square.svg",
+    "batteryCharge": "/battery-charge.svg",
+    "bolt": "/bolt.svg"
   }
 } as const;
 

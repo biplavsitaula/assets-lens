@@ -58,6 +58,9 @@ npx snap-assets --input ./public --output ./src/generated/assets.ts
 
 # watch mode
 npx snap-assets --input ./public --output ./src/generated/assets.ts --watch
+
+npx snap-assets --input ./public --input ./src/assets --output ./src/generated/assets.ts --watch
+
 ```
 
 Or use the npm script provided in `package.json` to watch (if the package is installed globally as a bin):
