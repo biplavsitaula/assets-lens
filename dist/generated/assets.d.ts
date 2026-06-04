@@ -6,5 +6,10 @@ export declare const Assets: {
             readonly bolt: "/icons/bolt.svg";
         };
     };
+    readonly assets: {
+        readonly addSquare: "/add-square.svg";
+        readonly batteryCharge: "/battery-charge.svg";
+        readonly bolt: "/bolt.svg";
+    };
 };
 export type AssetPaths = typeof Assets;

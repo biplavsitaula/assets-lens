@@ -1,6 +1,6 @@
 {
   "name": "assets-lens",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Zero-config asset mapping tool that watches your files and generates strictly typed autocomplete paths for your frontend applications.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

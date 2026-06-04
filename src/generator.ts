@@ -69,6 +69,7 @@ export function generateAssetTypes(inputDirs: string[], outputFile: string) {
 
   // Loop through each directory in the array
   for (const dir of inputDirs) {
+    console.log(dir);
     if (!fs.existsSync(dir)) continue;
 
     const folderName = toCamelCase(path.basename(dir));
@@ -81,7 +82,7 @@ export function generateAssetTypes(inputDirs: string[], outputFile: string) {
 
   const objectString = JSON.stringify(combinedMap, null, 2);
 
-  const fileContent = `// Generated automatically by snap-assets-map. Do not edit manually.
+  const fileContent = `// Generated automatically by snap-assets assets-lens. Do not edit manually.
 
 export const Assets = ${objectString} as const;
 

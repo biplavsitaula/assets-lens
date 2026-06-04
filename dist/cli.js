@@ -12,7 +12,7 @@ const generator_1 = require("./generator");
 const cli = (0, cac_1.cac)("snap-assets-map");
 cli
     .option("-i, --input <dir...>", "Input assets directories", {
-    default: ["./public"],
+    default: ["./public", "./src/assets"],
 })
     .option("-o, --output <file>", "Output TypeScript file path", {
     default: "./src/generated/assets.ts",
@@ -21,33 +21,45 @@ cli
     default: false,
 });
 const parsed = cli.parse();
-// 1. Force whatever CAC captures into a flat array of raw strings
-let rawInputs = [];
+// 1. Capture all raw input tokens from both the `--input` flags and trailing arguments
+let rawTokens = [];
 if (parsed.options.input) {
     if (Array.isArray(parsed.options.input)) {
-        rawInputs = parsed.options.input.map(String);
+        rawTokens = parsed.options.input.map(String);
     }
     else {
-        // Splits text if a user typed a comma list: "./public,./src/assets"
-        rawInputs = String(parsed.options.input).split(",");
+        rawTokens = String(parsed.options.input).split(",");
     }
 }
-else {
-    // Fallback to defaults if the flag was omitted entirely
-    rawInputs = ["./public", "./src/assets"];
+// Incorporate any loose arguments passed by the shell (e.g., if PowerShell dropped a flag)
+if (parsed.args && parsed.args.length > 0) {
+    rawTokens.push(...parsed.args);
 }
-// 2. Clean up any accidental padding spaces, resolve absolute paths, and remove duplicates
-const uniqueDirs = Array.from(new Set(rawInputs
-    .map((dir) => dir.trim())
-    .filter(Boolean)
-    .map((dir) => path_1.default.resolve(process.cwd(), dir))));
+// 2. Clean, normalize, and deduce absolute paths safely
+const resolvedPaths = rawTokens
+    .map((token) => token.trim()) // Strip accidental padding spaces
+    .filter(Boolean) // Remove empty elements
+    .map((token) => {
+    // Standardize leading directory slashes for cross-OS compatibility
+    let cleanToken = token.replace(/\\/g, "/");
+    if (cleanToken.startsWith("./")) {
+        cleanToken = cleanToken.slice(2);
+    }
+    else if (cleanToken.startsWith("/")) {
+        cleanToken = cleanToken.slice(1);
+    }
+    // Always calculate relative to your true execution root directory
+    return path_1.default.normalize(path_1.default.join(process.cwd(), cleanToken));
+});
+// 3. Remove duplicate paths (e.g., if a directory was captured twice by flags + arguments)
+const uniqueDirs = Array.from(new Set(resolvedPaths));
 const outputFile = path_1.default.resolve(process.cwd(), parsed.options.output);
 const shouldWatch = parsed.options.watch;
-// 3. Filter out non-existent directories instead of crashing!
+// 4. Validate existence of directories with a transparent absolute logging helper
 const validDirs = uniqueDirs.filter((dir) => {
     const exists = fs_1.default.existsSync(dir);
     if (!exists) {
-        console.log(`⚠️  [snap-assets-map] Skipping path: "${path_1.default.basename(dir)}" (Directory does not exist).`);
+        console.log(`⚠️  [snap-assets-map] Looked for folder at: "${dir}" but it does not exist.`);
     }
     return exists;
 });
